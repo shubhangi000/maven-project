@@ -1,7 +1,7 @@
-
-
 pipeline {
     agent any
+
+    //CI part
 
     stages {
         stage('Maven Checkout') {
@@ -33,5 +33,17 @@ pipeline {
                 }
             }
         }
+
+        //CD Part
+        stage('deploy the code') {
+            steps {
+                sshagent(['DEVCICD']) {
+                    sh 'scp -o StrictHostKeyChecking=no  /webapp/target/webapp.war ec2-user@172.31.17.248:/usr/share/tomcat/webapps'
+
+                }
+            }
+        }
     }
 }
+
+
