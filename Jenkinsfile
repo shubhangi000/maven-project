@@ -36,7 +36,7 @@ pipeline {
 
        stage('create docker image'){
             steps{
-                sh 'docker build -t shubhangi000/del1:latest'
+                sh 'docker build -t shubhangi000/del1:latest .'
             }
        }
 
