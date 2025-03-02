@@ -4,7 +4,7 @@ pipeline {
     //CI part
 
     stages {
-        stage('Maven Checkout') {
+        stage('SCM Checkout') {
             steps {
                 git 'https://github.com/shubhangi000/maven-project.git'
             }
@@ -34,15 +34,19 @@ pipeline {
             }
         }
 
-        //CD Part
-        stage('deploy the code') {
-            steps {
-                sshagent(['DEVCICD']) {
-                    sh 'scp -o StrictHostKeyChecking=no webapp/target/webapp.war ec2-user@172.31.17.248:/usr/share/tomcat/webapps'
+       stage('create docker image'){
+            steps{
+                sh 'docker build -t shubhangi000/del1:latest'
+            }
+       }
+
+       stage('push docker image to DockerHub'){
+            steps{
+                withDockerRegistry(credentialsId: 'docker_token', url: 'https://index.docker.io/v1/') 
+                {
+                    sh 'docker push shubhangi000/del1:latest'
                 }
             }
-        }
+       }
     }
 }
-
-
